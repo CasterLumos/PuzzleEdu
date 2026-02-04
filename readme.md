@@ -53,5 +53,7 @@ O projeto é uma SPA (Single Page Application) leve, sem dependências de build 
 * [x] Configuração de Dificuldade e Frequência de Letras
 * [x] Implementação do Gerador de Grid (Posicionamento de palavras)
 * [x] Interação de arrastar/selecionar (Mouse e Touch)
+* [x] Engine Dinâmica (Gera o jogo a partir de texto puro)
+* [x] Lista visual de palavras a encontrar (Chips)
 * [ ] Banco de Dados de Histórias (JSON)
 * [ ] Sistema de Save (LocalStorage) e Desbloqueio de Níveis

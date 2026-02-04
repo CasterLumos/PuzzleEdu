@@ -6,7 +6,7 @@
     /* Amarelo suave para seleção */
     --found: #55efc4;
     /* Verde Água para a palavra encontrada */
-    --text-found: #aaa;
+    --text-found: #000000;
     /* Cor do texto riscado na história */
     --text-highlight: #004d40;
     /* Cor da letra quando encontrada (verde escuro) */
@@ -334,6 +334,19 @@ body {
     color: #444;
 }
 
+span[data-word].riscada {
+    text-decoration: line-through;
+    color: var(--text-found) !important;
+    background-color: transparent !important;
+    /* Remove fundo laranja do modo fácil */
+    font-weight: normal !important;
+    /* Remove negrito */
+    border: none !important;
+    /* Remove sublinhado laranja */
+    opacity: 0.6;
+    transition: all 0.5s;
+}
+
 /* Destaque Modo Fácil */
 .texto-historia.modo-facil span[data-word] {
     font-weight: bold;
@@ -414,4 +427,33 @@ body {
         height: 28px;
         font-size: 0.9rem;
     }
+}
+
+/* --- LISTA DE PALAVRAS A ENCONTRAR --- */
+.container-lista-palavras {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.chip-palavra {
+    background-color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #666;
+    border: 1px solid #ddd;
+    transition: all 0.3s;
+}
+
+/* Quando a palavra é encontrada */
+.chip-palavra.encontrada {
+    background-color: var(--found);
+    color: #004d40;
+    border-color: var(--found);
+    text-decoration: line-through;
+    opacity: 0.7;
 }
