@@ -15,65 +15,66 @@ const PALAVRAS_IGNORADAS = [
     "por", "para", "com", "sem", "sob", "sobre", "ante", "até",
     "que", "e", "mas", "ou", "nem", "se", "como", "quando", "muito",
     "está", "estava", "foi", "havia", "tem", "tinha", "pela", "pelo",
-    "ela", "ele", "eles", "elas", "isso", "aquilo", "este", "esta"
+    "ela", "ele", "eles", "elas", "isso", "aquilo", "este", "esta", "sua", "seu"
 ];
 
-/* --- BANCO DE DADOS (TEXTO PURO) --- */
+/* --- BANCO DE DADOS (10 NÍVEIS) --- */
 const NIVEIS = [
     {
         id: 1,
-        titulo: "O Café da Manhã",
-        textoPuro: "Joana acordou cedo. Na mesa havia pão quentinho e leite fresco. Ela adora comer fruta pela manhã com alegria."
+        titulo: "A Floresta Encantada",
+        textoPuro: "A floresta antiga estava silenciosa naquela manhã fria de outono. As árvores gigantes balançavam seus galhos lentamente com o vento que soprava do norte. Um pequeno esquilo corria apressado procurando nozes para guardar antes que o inverno chegasse."
     },
     {
         id: 2,
-        titulo: "O Jardim",
-        textoPuro: "No jardim, a flor vermelha se destaca muito. A grama está verde e o sol brilha forte e radiante no céu azul."
+        titulo: "Receita da Vovó",
+        textoPuro: "Para fazer o bolo perfeito, minha avó sempre dizia que o segredo é o amor e a paciência. Primeiro, bata a massa com força até ficar bem fofa e homogênea. Depois, coloque no forno quente e espere aquele cheiro delicioso de chocolate invadir a casa toda."
     },
     {
         id: 3,
-        titulo: "A Escola",
-        textoPuro: "Na escola, peguei meu livro pesado e meu lápis novo para começar a aula de hoje com muita atenção."
+        titulo: "Viagem ao Fundo do Mar",
+        textoPuro: "O submarino amarelo desceu lentamente para as profundezas do oceano azul. Pela janela, vimos um cardume colorido nadando perto de um coral brilhante e cheio de vida. Um grande tubarão passou silencioso ao lado, observando tudo com curiosidade."
     },
     {
         id: 4,
-        titulo: "A Praia",
-        textoPuro: "Fui à praia ver o mar azul. Brinquei na areia fofa e pulei cada onda gigante com muita coragem e diversão."
+        titulo: "O Detetive Curioso",
+        textoPuro: "O detetive pegou sua lupa para investigar as pegadas misteriosas no chão molhado. Ele sabia que o ladrão não poderia ter ido muito longe naquela noite chuvosa e escura. Cada pista encontrada era uma peça importante para resolver aquele enigma difícil."
     },
     {
         id: 5,
-        titulo: "O Espaço",
-        textoPuro: "O astronauta viu a Lua brilhante e uma estrela cadente de dentro da sua nave espacial viajando pelo universo infinito."
+        titulo: "Campeonato de Futebol",
+        textoPuro: "O estádio estava lotado e a torcida gritava muito alto agitando as bandeiras do time. O atacante correu rápido com a bola, driblou o zagueiro e chutou com força para o gol. Foi o momento mais emocionante da partida final daquele campeonato inesquecível."
     },
     {
         id: 6,
-        titulo: "O Sítio",
-        textoPuro: "No sítio do vovô vi uma vaca malhada e um pato nadando feliz no lago calmo perto da grande árvore."
+        titulo: "A Biblioteca Mágica",
+        textoPuro: "Naquela biblioteca, os livros não ficavam parados nas estantes empoeiradas. À noite, as histórias saíam das páginas e voavam pela sala como pássaros de papel. Quem entrava lá podia viver uma aventura diferente a cada capítulo lido com atenção."
     },
     {
         id: 7,
-        titulo: "Aniversário",
-        textoPuro: "No meu aniversário teve um bolo delicioso de chocolate com vela colorida e uma grande festa com todos os amigos."
+        titulo: "Acampamento na Serra",
+        textoPuro: "Montamos nossa barraca perto de um rio cristalino que descia da montanha alta. À noite, fizemos uma fogueira quente para assar marshmallows e contar histórias de terror. O céu estava tão limpo que podíamos ver a via láctea inteira brilhando sobre nós."
     },
     {
         id: 8,
-        titulo: "Música",
-        textoPuro: "A música tem um som que encanta a todos. Aprendi cada nota nova no meu canto diário com muita dedicação."
+        titulo: "O Cientista Maluco",
+        textoPuro: "No laboratório secreto, o cientista misturou dois líquidos coloridos em um frasco de vidro. De repente, uma fumaça roxa subiu e transformou o rato em um elefante gigante e atrapalhado. Foi uma confusão enorme tentar esconder aquele animal enorme dentro da sala pequena."
     },
     {
         id: 9,
-        titulo: "Esportes",
-        textoPuro: "Chutei a bola com força no campo e fiz um lindo gol para o meu time vencer o campeonato final."
+        titulo: "Corrida Espacial",
+        textoPuro: "A nave ligou seus motores potentes e a contagem regressiva começou no centro de controle. Em poucos segundos, o foguete subiu rasgando o céu em direção ao planeta vermelho distante. A humanidade assistia admirada aquele passo gigante para o futuro da exploração."
     },
     {
         id: 10,
-        titulo: "O Mestre",
-        textoPuro: "Você se tornou um sábio inteligente por estar lendo tanto livro bom. Este é o fim da jornada de conhecimento!"
+        titulo: "O Tesouro Pirata",
+        textoPuro: "O capitão pirata olhou seu mapa antigo e apontou para a ilha deserta no horizonte. Eles cavaram na areia branca até encontrar um baú pesado cheio de moedas de ouro. Aquele tesouro lendário ficou escondido por séculos esperando bravos aventureiros como eles."
     }
 ];
 
 /* --- ESTADO DO JOGO --- */
 let estado = {
+    dificuldade: 'facil',
     nivelAtualObj: null,
     grid: [],
     solucao: [],
@@ -85,44 +86,62 @@ let estado = {
 function processarNivelDinamico(nivelBruto) {
     const texto = nivelBruto.textoPuro;
 
-    // 1. Limpa pontuação
-    const palavrasCandidatas = texto
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
-        .split(/\s+/)
-        .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
+    // 1. Divide o texto em frases
+    const frases = texto.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [texto];
 
-    // 2. Seleciona 5 palavras (ou o máximo possível se tiver menos)
-    const unicas = [...new Set(palavrasCandidatas)];
-    // AQUI MUDAMOS PARA 5
-    const quantidadeParaEscolher = Math.min(unicas.length, 5);
+    // 2. Extrai candidatos por frase
+    let gruposDeFrases = frases.map((frase, index) => {
+        const palavrasLimpas = frase
+            .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+            .split(/\s+/)
+            .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
 
-    // Sorteia
-    const escolhidas = unicas.sort(() => 0.5 - Math.random()).slice(0, quantidadeParaEscolher);
+        return {
+            palavras: [...new Set(palavrasLimpas)]
+        };
+    }).filter(g => g.palavras.length > 0);
 
-    // 3. Monta HTML e Lista
+    // 3. Seleção Distribuída
+    const palavrasSelecionadas = [];
+    const maxPalavras = 10; // Aumentado para 10 conforme solicitado
+
+    let tentativas = 0;
+    while (palavrasSelecionadas.length < maxPalavras && tentativas < 30) {
+        gruposDeFrases.sort(() => 0.5 - Math.random());
+
+        for (let grupo of gruposDeFrases) {
+            if (palavrasSelecionadas.length >= maxPalavras) break;
+
+            if (grupo.palavras.length > 0) {
+                const randIndex = Math.floor(Math.random() * grupo.palavras.length);
+                const palavra = grupo.palavras[randIndex].toUpperCase();
+
+                if (!palavrasSelecionadas.includes(palavra)) {
+                    palavrasSelecionadas.push(palavra);
+                }
+                grupo.palavras.splice(randIndex, 1);
+            }
+        }
+        tentativas++;
+    }
+
+    // 4. Injeção no HTML
     let textoProcessado = texto;
-    const palavrasFinais = [];
-
-    escolhidas.forEach(palavra => {
-        const palavraUpper = palavra.toUpperCase();
-        palavrasFinais.push(palavraUpper);
-
-        // Substitui apenas a primeira ocorrência (case insensitive)
-        const regex = new RegExp(`\\b${palavra}\\b`, 'i');
+    palavrasSelecionadas.forEach(palavra => {
+        const regex = new RegExp(`\\b${palavra}\\b`, 'gi');
         textoProcessado = textoProcessado.replace(regex, (match) => {
-            return `<span data-word='${palavraUpper}'>${match}</span>`;
+            return `<span data-word='${palavra}'>${match}</span>`;
         });
     });
 
-    // 4. Calcula tamanho do grid
-    const maiorPalavra = Math.max(...palavrasFinais.map(p => p.length));
-    const tamanhoGrid = Math.max(10, maiorPalavra + 2);
+    const maiorPalavra = Math.max(...palavrasSelecionadas.map(p => p.length));
+    const tamanhoGrid = Math.max(12, maiorPalavra + 2);
 
     return {
         id: nivelBruto.id,
         titulo: nivelBruto.titulo,
         texto: textoProcessado,
-        palavras: palavrasFinais,
+        palavras: palavrasSelecionadas,
         tamanho: tamanhoGrid
     };
 }
@@ -144,12 +163,16 @@ function getLetraAleatoria() {
 /* --- MOTOR DO JOGO --- */
 
 function iniciarJogo(dificuldade) {
+    estado.dificuldade = dificuldade; // Salva a dificuldade no estado
     gerarPoolLetras();
+
     document.getElementById('tela-inicio').classList.replace('visivel', 'oculto');
     document.getElementById('tela-jogo').classList.replace('oculto', 'visivel');
 
     const containerTexto = document.getElementById('conteudo-texto');
-    if (dificuldade === 'facil') {
+
+    // ATUALIZAÇÃO: Fácil e Médio têm destaque no texto. Difícil não.
+    if (dificuldade === 'facil' || dificuldade === 'medio') {
         containerTexto.classList.add('modo-facil');
     } else {
         containerTexto.classList.remove('modo-facil');
@@ -174,12 +197,19 @@ function carregarNivel(idNivel, dificuldade) {
     document.getElementById('titulo-historia').innerText = nivelProcessado.titulo;
     document.getElementById('conteudo-texto').innerHTML = nivelProcessado.texto;
 
-    // GERA A LISTA DE CHIPS (PALAVRAS A ENCONTRAR)
-    renderizarListaPalavras(nivelProcessado.palavras);
+    // ATUALIZAÇÃO: Lista de palavras (Chips) aparece apenas no FÁCIL
+    const containerLista = document.getElementById('lista-palavras');
+    if (dificuldade === 'facil') {
+        renderizarListaPalavras(nivelProcessado.palavras);
+    } else {
+        containerLista.innerHTML = ''; // Limpa a lista para Médio e Difícil
+    }
 
-    atualizarContador();
-    gerarMatrizGrid(nivelProcessado, difficulty = dificuldade);
+    gerarMatrizGrid(nivelProcessado, dificuldade);
     renderizarGrid();
+
+    // Atualiza progresso inicial (caso tenha removido o contador, essa função lida com segurança)
+    atualizarContador();
 }
 
 // Nova função para mostrar a lista de palavras
@@ -191,7 +221,7 @@ function renderizarListaPalavras(listaPalavras) {
         const chip = document.createElement('div');
         chip.className = 'chip-palavra';
         chip.innerText = palavra;
-        chip.dataset.target = palavra; // Para achar fácil depois
+        chip.dataset.target = palavra;
         container.appendChild(chip);
     });
 }
@@ -229,7 +259,6 @@ function gerarMatrizGrid(nivel, dificuldade) {
                 tentativas++;
             }
         }
-        if (!colocado) console.warn(`Falha ao encaixar: ${palavra}`);
     });
 
     for (let r = 0; r < tam; r++) {
@@ -325,6 +354,7 @@ function atualizarSelecao(e) {
     const cInicio = estado.selecao.inicio.c;
     const dr = rAtual - rInicio;
     const dc = cAtual - cInicio;
+
     const ehHorizontal = dr === 0;
     const ehVertical = dc === 0;
     const ehDiagonal = Math.abs(dr) === Math.abs(dc);
@@ -386,15 +416,17 @@ function marcarPalavraEncontrada(objSolucao) {
     });
     desenharRisco(coords[0], coords[coords.length - 1]);
 
-    // 2. Texto
-    const spanTexto = document.querySelector(`span[data-word='${objSolucao.palavra}']`);
-    if (spanTexto) spanTexto.classList.add('riscada');
+    // 2. Texto (Risca todas as ocorrências)
+    const spansTexto = document.querySelectorAll(`span[data-word='${objSolucao.palavra}']`);
+    spansTexto.forEach(span => {
+        span.classList.add('riscada');
+    });
 
-    // 3. ATUALIZA A ETIQUETA (LISTA VISUAL)
+    // 3. Etiqueta (Se existir)
     const chip = document.querySelector(`.chip-palavra[data-target='${objSolucao.palavra}']`);
     if (chip) chip.classList.add('encontrada');
 
-    atualizarContador();
+    atualizarContador(); // Chama atualização segura
     verificarFimNivel();
 }
 
@@ -426,11 +458,21 @@ function desenharRisco(coordInicio, coordFim) {
 }
 
 function atualizarContador() {
+    // ATUALIZAÇÃO DE SEGURANÇA: Verifica se os elementos existem antes de tentar atualizar
+    // já que você removeu o contador do HTML.
     const total = estado.nivelAtualObj.palavras.length;
     const achadas = estado.palavrasEncontradas.length;
-    document.getElementById('contador-palavras').innerText = `${achadas}/${total}`;
-    const porcentagem = (achadas / total) * 100;
-    document.getElementById('barra-progresso').style.width = `${porcentagem}%`;
+
+    const elContador = document.getElementById('contador-palavras');
+    if (elContador) {
+        elContador.innerText = `${achadas}/${total}`;
+    }
+
+    const elBarra = document.getElementById('barra-progresso');
+    if (elBarra) {
+        const porcentagem = (achadas / total) * 100;
+        elBarra.style.width = `${porcentagem}%`;
+    }
 }
 
 function verificarFimNivel() {
