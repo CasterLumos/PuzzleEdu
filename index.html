@@ -4,26 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puzzle Educacional de Histórias</title>
+    <title>Mini Bichos - Puzzle Educacional</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
     <div id="tela-inicio" class="container visivel">
-        <h1>Mundo das Palavras</h1>
-        <p>Escolha a dificuldade para começar sua aventura:</p>
+        <h1>Mini Bichos</h1>
+        <p>Escolha a dificuldade para explorar a natureza:</p>
 
         <div class="selecao-dificuldade">
-            <button onclick="iniciarJogo('facil')" class="btn-dificuldade facil">Fácil</button>
-            <button onclick="iniciarJogo('medio')" class="btn-dificuldade medio">Médio</button>
-            <button onclick="iniciarJogo('dificil')" class="btn-dificuldade dificil">Difícil</button>
+            <button onclick="escolherDificuldade('facil')" class="btn-dificuldade facil">Fácil</button>
+            <button onclick="escolherDificuldade('medio')" class="btn-dificuldade medio">Médio</button>
+            <button onclick="escolherDificuldade('dificil')" class="btn-dificuldade dificil">Difícil</button>
+        </div>
+    </div>
+
+    <div id="tela-niveis" class="container oculto">
+        <header class="barra-topo-simples">
+            <button onclick="voltarParaInicio()" class="btn-voltar">← Voltar</button>
+            <h2>Capítulos</h2>
+            <div style="width: 80px;"></div>
+        </header>
+
+        <div id="grid-niveis" class="grid-niveis">
         </div>
     </div>
 
     <div id="tela-jogo" class="container oculto">
         <header class="barra-topo">
-            <button onclick="voltarInicio()" class="btn-voltar">← Voltar</button>
+            <button onclick="voltarParaMenuNiveis()" class="btn-voltar">← Níveis</button>
             <div class="info-nivel">
                 <span id="nivel-atual">Nível 1</span>
                 <div class="progresso-container">
@@ -34,9 +45,8 @@
 
         <main class="area-jogo">
             <section class="painel-esquerdo">
-                <div id="container-grid" style="position: relative;">
-                    <div id="grid-cacapalavras">
-                    </div>
+                <div id="container-grid">
+                    <div id="grid-cacapalavras"></div>
                     <div id="camada-riscos"></div>
                 </div>
             </section>
@@ -45,7 +55,9 @@
                 <h2 id="titulo-historia">Título da História</h2>
                 <div id="conteudo-texto" class="texto-historia">
                 </div>
-                <div id="lista-palavras" class="container-lista-palavras">
+                <div id="lista-palavras" class="container-lista-palavras"></div>
+                <div style="margin-top: 10px; font-size: 0.9rem; color: #888;">
+                    Progresso: <span id="contador-palavras">0/0</span>
                 </div>
             </section>
         </main>
@@ -53,8 +65,8 @@
         <div id="modal-vitoria" class="modal oculto">
             <div class="modal-conteudo">
                 <h2>Parabéns!</h2>
-                <p>Você completou o nível!</p>
-                <button onclick="proximoNivel()" id="btn-proximo">Próximo Nível</button>
+                <p>Você completou este capítulo!</p>
+                <button onclick="voltarParaMenuNiveis()" id="btn-proximo">Continuar</button>
             </div>
         </div>
     </div>

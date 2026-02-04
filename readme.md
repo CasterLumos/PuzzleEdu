@@ -55,5 +55,5 @@ O projeto é uma SPA (Single Page Application) leve, sem dependências de build 
 * [x] Engine Dinâmica (Gera o jogo a partir de texto puro)
 * [x] Banco de Dados de Histórias (10 Níveis Completos)
 * [x] Lógica de Dificuldade (Visibilidade de Lista e Destaques)
-* [ ] Sistema de Save (LocalStorage) e Menu de Níveis
+* [x] Sistema de Save (LocalStorage) e Menu de Níveis
 * [ ] Refatoração: Mover dados para arquivo JSON externo (Opcional)

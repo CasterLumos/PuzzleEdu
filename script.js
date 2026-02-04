@@ -8,7 +8,6 @@ const DIRECOES = {
 const ORDEM_FREQUENCIA = "aeosridmntcuvlpgqbfhãôâçêjéóxúíáàwky";
 let poolLetras = [];
 
-/* --- PALAVRAS A IGNORAR (Stopwords) --- */
 const PALAVRAS_IGNORADAS = [
     "o", "a", "os", "as", "um", "uma", "uns", "umas",
     "de", "do", "da", "dos", "das", "em", "no", "na", "nos", "nas",
@@ -18,57 +17,42 @@ const PALAVRAS_IGNORADAS = [
     "ela", "ele", "eles", "elas", "isso", "aquilo", "este", "esta", "sua", "seu"
 ];
 
-/* --- BANCO DE DADOS (10 NÍVEIS) --- */
-const NIVEIS = [
+/* --- BANCO DE DADOS: MINI BICHOS --- */
+const NIVEIS_RAW = [
     {
         id: 1,
-        titulo: "A Floresta Encantada",
-        textoPuro: "A floresta antiga estava silenciosa naquela manhã fria de outono. As árvores gigantes balançavam seus galhos lentamente com o vento que soprava do norte. Um pequeno esquilo corria apressado procurando nozes para guardar antes que o inverno chegasse."
+        titulo: "O Mundo dos Besouros",
+        textoPuro: "Existem besouros de todos os tipos. A família das joaninhas traz sorte e ajuda no controle biológico. Já os escaravelhos eram sagrados no Egito Antigo. Alguns besouros se fingem de mortos quando ameaçados e outros, como o gigante, possuem mandíbulas muito fortes."
     },
     {
         id: 2,
-        titulo: "Receita da Vovó",
-        textoPuro: "Para fazer o bolo perfeito, minha avó sempre dizia que o segredo é o amor e a paciência. Primeiro, bata a massa com força até ficar bem fofa e homogênea. Depois, coloque no forno quente e espere aquele cheiro delicioso de chocolate invadir a casa toda."
+        titulo: "As Minhocas",
+        textoPuro: "As minhocas são anelídeos de corpo cilíndrico que vivem na terra. Elas são muito importantes para o solo, deixando a terra fofa e arejada. Além disso, produzem o húmus, que é um excelente adubo natural para as plantas crescerem fortes."
     },
     {
         id: 3,
-        titulo: "Viagem ao Fundo do Mar",
-        textoPuro: "O submarino amarelo desceu lentamente para as profundezas do oceano azul. Pela janela, vimos um cardume colorido nadando perto de um coral brilhante e cheio de vida. Um grande tubarão passou silencioso ao lado, observando tudo com curiosidade."
+        titulo: "Borboletas e Mariposas",
+        textoPuro: "As borboletas são coloridas e voam durante o dia, enquanto as mariposas preferem a noite. Ambas são importantes polinizadoras. Ao se alimentar do néctar, elas carregam o pólen que ajuda na reprodução de muitas flores e plantas da natureza."
     },
     {
         id: 4,
-        titulo: "O Detetive Curioso",
-        textoPuro: "O detetive pegou sua lupa para investigar as pegadas misteriosas no chão molhado. Ele sabia que o ladrão não poderia ter ido muito longe naquela noite chuvosa e escura. Cada pista encontrada era uma peça importante para resolver aquele enigma difícil."
+        titulo: "O Exército de Formigas",
+        textoPuro: "As formigas são insetos muito fortes que podem carregar até cinquenta vezes o seu próprio peso. Elas vivem em sociedades organizadas onde cada uma tem sua tarefa. Usam suas antenas para cheirar e se comunicar com as outras companheiras do formigueiro."
     },
     {
         id: 5,
-        titulo: "Campeonato de Futebol",
-        textoPuro: "O estádio estava lotado e a torcida gritava muito alto agitando as bandeiras do time. O atacante correu rápido com a bola, driblou o zagueiro e chutou com força para o gol. Foi o momento mais emocionante da partida final daquele campeonato inesquecível."
+        titulo: "O Cupim",
+        textoPuro: "Os cupins vivem em colônias com rei, rainha e soldados. Eles são conhecidos por comer madeira rapidamente e podem construir ninhos gigantes. Na época de chuva, os cupins alados saem em revoada perto das lâmpadas para tentar fundar novas colônias."
     },
     {
         id: 6,
-        titulo: "A Biblioteca Mágica",
-        textoPuro: "Naquela biblioteca, os livros não ficavam parados nas estantes empoeiradas. À noite, as histórias saíam das páginas e voavam pela sala como pássaros de papel. Quem entrava lá podia viver uma aventura diferente a cada capítulo lido com atenção."
+        titulo: "Tatu de Jardim",
+        textoPuro: "O tatuzinho de jardim não é um inseto, mas sim um crustáceo terrestre, parente do camarão. Ele precisa de umidade para viver e tem uma defesa especial: quando se sente ameaçado, ele se enrola todo e vira uma bolinha dura para se proteger."
     },
     {
         id: 7,
-        titulo: "Acampamento na Serra",
-        textoPuro: "Montamos nossa barraca perto de um rio cristalino que descia da montanha alta. À noite, fizemos uma fogueira quente para assar marshmallows e contar histórias de terror. O céu estava tão limpo que podíamos ver a via láctea inteira brilhando sobre nós."
-    },
-    {
-        id: 8,
-        titulo: "O Cientista Maluco",
-        textoPuro: "No laboratório secreto, o cientista misturou dois líquidos coloridos em um frasco de vidro. De repente, uma fumaça roxa subiu e transformou o rato em um elefante gigante e atrapalhado. Foi uma confusão enorme tentar esconder aquele animal enorme dentro da sala pequena."
-    },
-    {
-        id: 9,
-        titulo: "Corrida Espacial",
-        textoPuro: "A nave ligou seus motores potentes e a contagem regressiva começou no centro de controle. Em poucos segundos, o foguete subiu rasgando o céu em direção ao planeta vermelho distante. A humanidade assistia admirada aquele passo gigante para o futuro da exploração."
-    },
-    {
-        id: 10,
-        titulo: "O Tesouro Pirata",
-        textoPuro: "O capitão pirata olhou seu mapa antigo e apontou para a ilha deserta no horizonte. Eles cavaram na areia branca até encontrar um baú pesado cheio de moedas de ouro. Aquele tesouro lendário ficou escondido por séculos esperando bravos aventureiros como eles."
+        titulo: "Grilos e Gafanhotos",
+        textoPuro: "Você sabe a diferença? O grilo tem antenas longas e gosta da noite, fazendo seu som esfregando as asas. Já o gafanhoto tem antenas curtas, prefere o dia e canta esfregando as pernas. A esperança costuma ser verde e parece uma folha."
     }
 ];
 
@@ -82,40 +66,49 @@ let estado = {
     palavrasEncontradas: []
 };
 
-/* --- PROCESSADOR DE TEXTO (Engine) --- */
+/* --- SISTEMA DE SAVE (LOCALSTORAGE) --- */
+function getProgressoSalvo() {
+    const key = `puzzle_mini_bichos_${estado.dificuldade}`;
+    const salvo = localStorage.getItem(key);
+    return salvo ? JSON.parse(salvo) : {};
+}
+
+function salvarPalavraEncontrada(idNivel, palavra) {
+    const key = `puzzle_mini_bichos_${estado.dificuldade}`;
+    let progresso = getProgressoSalvo();
+
+    if (!progresso[idNivel]) progresso[idNivel] = [];
+
+    if (!progresso[idNivel].includes(palavra)) {
+        progresso[idNivel].push(palavra);
+        localStorage.setItem(key, JSON.stringify(progresso));
+    }
+}
+
+/* --- ENGINE DINÂMICA --- */
 function processarNivelDinamico(nivelBruto) {
     const texto = nivelBruto.textoPuro;
-
-    // 1. Divide o texto em frases
     const frases = texto.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [texto];
 
-    // 2. Extrai candidatos por frase
-    let gruposDeFrases = frases.map((frase, index) => {
+    let gruposDeFrases = frases.map((frase) => {
         const palavrasLimpas = frase
             .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
             .split(/\s+/)
             .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
-
-        return {
-            palavras: [...new Set(palavrasLimpas)]
-        };
+        return { palavras: [...new Set(palavrasLimpas)] };
     }).filter(g => g.palavras.length > 0);
 
-    // 3. Seleção Distribuída
     const palavrasSelecionadas = [];
-    const maxPalavras = 10; // Aumentado para 10 conforme solicitado
+    const maxPalavras = 8; // Busca até 8 palavras
 
     let tentativas = 0;
-    while (palavrasSelecionadas.length < maxPalavras && tentativas < 30) {
+    while (palavrasSelecionadas.length < maxPalavras && tentativas < 40) {
         gruposDeFrases.sort(() => 0.5 - Math.random());
-
         for (let grupo of gruposDeFrases) {
             if (palavrasSelecionadas.length >= maxPalavras) break;
-
             if (grupo.palavras.length > 0) {
                 const randIndex = Math.floor(Math.random() * grupo.palavras.length);
                 const palavra = grupo.palavras[randIndex].toUpperCase();
-
                 if (!palavrasSelecionadas.includes(palavra)) {
                     palavrasSelecionadas.push(palavra);
                 }
@@ -125,7 +118,6 @@ function processarNivelDinamico(nivelBruto) {
         tentativas++;
     }
 
-    // 4. Injeção no HTML
     let textoProcessado = texto;
     palavrasSelecionadas.forEach(palavra => {
         const regex = new RegExp(`\\b${palavra}\\b`, 'gi');
@@ -146,85 +138,153 @@ function processarNivelDinamico(nivelBruto) {
     };
 }
 
-/* --- FUNÇÕES AUXILIARES --- */
-function gerarPoolLetras() {
-    if (poolLetras.length > 0) return;
-    const total = ORDEM_FREQUENCIA.length;
-    for (let i = 0; i < total; i++) {
-        let peso = Math.max(1, 40 - i);
-        for (let j = 0; j < peso; j++) poolLetras.push(ORDEM_FREQUENCIA[i]);
-    }
-}
+/* --- NAVEGAÇÃO E MENU --- */
 
-function getLetraAleatoria() {
-    return poolLetras[Math.floor(Math.random() * poolLetras.length)].toUpperCase();
-}
-
-/* --- MOTOR DO JOGO --- */
-
-function iniciarJogo(dificuldade) {
-    estado.dificuldade = dificuldade; // Salva a dificuldade no estado
+function iniciar() {
     gerarPoolLetras();
+}
 
+function escolherDificuldade(dif) {
+    estado.dificuldade = dif;
     document.getElementById('tela-inicio').classList.replace('visivel', 'oculto');
+    document.getElementById('tela-niveis').classList.replace('oculto', 'visivel');
+    renderizarMenuNiveis();
+}
+
+function voltarParaInicio() {
+    document.getElementById('tela-niveis').classList.replace('visivel', 'oculto');
+    document.getElementById('tela-inicio').classList.replace('oculto', 'visivel');
+}
+
+function voltarParaMenuNiveis() {
+    document.getElementById('tela-jogo').classList.replace('visivel', 'oculto');
+    document.getElementById('tela-niveis').classList.replace('oculto', 'visivel');
+    document.getElementById('modal-vitoria').classList.add('oculto');
+    renderizarMenuNiveis();
+}
+
+function renderizarMenuNiveis() {
+    const container = document.getElementById('grid-niveis');
+    container.innerHTML = '';
+    const progressoSalvo = getProgressoSalvo();
+
+    let niveisAnterioresCompletos = true;
+
+    NIVEIS_RAW.forEach((nivelRaw, index) => {
+        // Processa levemente para saber total estimado (pode variar se for aleatório, 
+        // mas assumimos média de 8 para cálculo visual)
+        const achadas = progressoSalvo[nivelRaw.id] || [];
+        // Estimativa para barra de progresso do menu
+        const porcentagem = Math.min(100, Math.floor((achadas.length / 8) * 100));
+
+        // Lógica de Bloqueio
+        let bloqueado = true;
+        let motivo = "";
+
+        if (index === 0) {
+            bloqueado = false;
+        } else {
+            // Verifica o anterior
+            const idAnterior = NIVEIS_RAW[index - 1].id;
+            const achadasAnterior = (progressoSalvo[idAnterior] || []).length;
+
+            // Regra: Precisa de pelo menos 6 palavras (aprox 75% de 8) para liberar o próximo
+            if (achadasAnterior >= 6) bloqueado = false;
+            else motivo = "Complete o anterior";
+        }
+
+        const card = document.createElement('div');
+        card.className = `card-nivel ${bloqueado ? 'bloqueado' : ''} ${porcentagem >= 90 ? 'concluido' : ''}`;
+
+        let html = `<h3>${index + 1}. ${nivelRaw.titulo}</h3>`;
+
+        if (bloqueado) {
+            html += `<div class="icon-cadeado">🔒</div>`;
+            html += `<p style="font-size:0.8rem">Bloqueado</p>`;
+        } else {
+            html += `<p class="progresso-texto">${achadas.length} palavras encontradas</p>`;
+            card.onclick = () => carregarNivel(nivelRaw.id);
+        }
+
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+}
+
+/* --- CARREGAMENTO DO JOGO --- */
+
+function carregarNivel(idNivel) {
+    document.getElementById('tela-niveis').classList.replace('visivel', 'oculto');
     document.getElementById('tela-jogo').classList.replace('oculto', 'visivel');
+    document.getElementById('camada-riscos').innerHTML = '';
 
+    const nivelBruto = NIVEIS_RAW.find(n => n.id === idNivel);
+    const nivelProcessado = processarNivelDinamico(nivelBruto);
+
+    estado.nivelAtualObj = nivelProcessado;
+
+    // Recupera Save
+    const progresso = getProgressoSalvo();
+    estado.palavrasEncontradas = progresso[idNivel] || [];
+
+    // UI
+    document.getElementById('titulo-historia').innerText = nivelProcessado.titulo;
+    document.getElementById('nivel-atual').innerText = nivelProcessado.titulo;
+
+    // Destaques e Listas baseados na Dificuldade
     const containerTexto = document.getElementById('conteudo-texto');
+    const containerLista = document.getElementById('lista-palavras');
+    containerTexto.innerHTML = nivelProcessado.texto;
 
-    // ATUALIZAÇÃO: Fácil e Médio têm destaque no texto. Difícil não.
-    if (dificuldade === 'facil' || dificuldade === 'medio') {
+    if (estado.dificuldade === 'facil' || estado.dificuldade === 'medio') {
         containerTexto.classList.add('modo-facil');
     } else {
         containerTexto.classList.remove('modo-facil');
     }
 
-    carregarNivel(1, dificuldade);
-}
-
-function carregarNivel(idNivel, dificuldade) {
-    document.getElementById('camada-riscos').innerHTML = '';
-
-    const nivelBruto = NIVEIS.find(n => n.id === idNivel);
-    if (!nivelBruto) return;
-
-    // Processa o texto na hora
-    const nivelProcessado = processarNivelDinamico(nivelBruto);
-
-    estado.nivelAtualObj = nivelProcessado;
-    estado.palavrasEncontradas = [];
-
-    // UI Updates
-    document.getElementById('titulo-historia').innerText = nivelProcessado.titulo;
-    document.getElementById('conteudo-texto').innerHTML = nivelProcessado.texto;
-
-    // ATUALIZAÇÃO: Lista de palavras (Chips) aparece apenas no FÁCIL
-    const containerLista = document.getElementById('lista-palavras');
-    if (dificuldade === 'facil') {
+    if (estado.dificuldade === 'facil') {
         renderizarListaPalavras(nivelProcessado.palavras);
     } else {
-        containerLista.innerHTML = ''; // Limpa a lista para Médio e Difícil
+        containerLista.innerHTML = '';
     }
 
-    gerarMatrizGrid(nivelProcessado, dificuldade);
-    renderizarGrid();
+    // Marca palavras já encontradas (Save)
+    setTimeout(restaurarEstadoVisual, 100);
 
-    // Atualiza progresso inicial (caso tenha removido o contador, essa função lida com segurança)
+    gerarMatrizGrid(nivelProcessado, estado.dificuldade);
+    renderizarGrid();
     atualizarContador();
 }
 
-// Nova função para mostrar a lista de palavras
+function restaurarEstadoVisual() {
+    estado.palavrasEncontradas.forEach(palavra => {
+        // Risca Texto
+        document.querySelectorAll(`span[data-word='${palavra}']`)
+            .forEach(span => span.classList.add('riscada'));
+
+        // Risca Lista (se existir)
+        const chip = document.querySelector(`.chip-palavra[data-target='${palavra}']`);
+        if (chip) chip.classList.add('encontrada');
+    });
+}
+
 function renderizarListaPalavras(listaPalavras) {
     const container = document.getElementById('lista-palavras');
-    container.innerHTML = ''; // Limpa anterior
-
+    container.innerHTML = '';
     listaPalavras.forEach(palavra => {
         const chip = document.createElement('div');
         chip.className = 'chip-palavra';
         chip.innerText = palavra;
         chip.dataset.target = palavra;
+        // Se já foi achada antes, marca
+        if (estado.palavrasEncontradas.includes(palavra)) {
+            chip.classList.add('encontrada');
+        }
         container.appendChild(chip);
     });
 }
+
+/* --- GRID E LÓGICA --- */
 
 function gerarMatrizGrid(nivel, dificuldade) {
     const tam = nivel.tamanho;
@@ -233,8 +293,6 @@ function gerarMatrizGrid(nivel, dificuldade) {
 
     const palavrasOrdenadas = [...nivel.palavras].sort((a, b) => b.length - a.length);
     const direcoesValidas = DIRECOES[dificuldade];
-
-    // Balanceamento Sorte vs Cruzamento
     const fatorCruzamento = 0.5;
 
     palavrasOrdenadas.forEach((palavra, index) => {
@@ -251,7 +309,6 @@ function gerarMatrizGrid(nivel, dificuldade) {
                 const r = Math.floor(Math.random() * tam);
                 const c = Math.floor(Math.random() * tam);
                 const dir = direcoesValidas[Math.floor(Math.random() * direcoesValidas.length)];
-
                 if (podeColocar(grid, palavra, r, c, dir, tam)) {
                     colocarPalavra(grid, palavra, r, c, dir);
                     colocado = true;
@@ -313,7 +370,8 @@ function colocarPalavra(grid, palavra, r, c, dir) {
     estado.solucao.push({ palavra, coordenadas });
 }
 
-/* --- RENDERIZAÇÃO E INTERAÇÃO --- */
+/* --- INTERAÇÃO E RENDERIZAÇÃO --- */
+
 function renderizarGrid() {
     const container = document.getElementById('grid-cacapalavras');
     container.innerHTML = '';
@@ -327,12 +385,25 @@ function renderizarGrid() {
             div.innerText = letra;
             div.dataset.r = r;
             div.dataset.c = c;
+
             div.addEventListener('mousedown', iniciarSelecao);
             div.addEventListener('mouseover', atualizarSelecao);
             div.addEventListener('mouseup', finalizarSelecao);
             container.appendChild(div);
         });
     });
+
+    // Riscar no grid palavras já encontradas (Save)
+    estado.solucao.forEach(sol => {
+        if (estado.palavrasEncontradas.includes(sol.palavra)) {
+            sol.coordenadas.forEach(coord => {
+                const el = document.querySelector(`.celula[data-r='${coord.r}'][data-c='${coord.c}']`);
+                if (el) el.classList.add('encontrada');
+            });
+            desenharRisco(sol.coordenadas[0], sol.coordenadas[sol.coordenadas.length - 1]);
+        }
+    });
+
     document.body.addEventListener('mouseup', () => {
         if (estado.selecao.ativo) finalizarSelecao();
     });
@@ -354,7 +425,6 @@ function atualizarSelecao(e) {
     const cInicio = estado.selecao.inicio.c;
     const dr = rAtual - rInicio;
     const dc = cAtual - cInicio;
-
     const ehHorizontal = dr === 0;
     const ehVertical = dc === 0;
     const ehDiagonal = Math.abs(dr) === Math.abs(dc);
@@ -365,10 +435,7 @@ function atualizarSelecao(e) {
         const passoR = dr === 0 ? 0 : dr / passos;
         const passoC = dc === 0 ? 0 : dc / passos;
         for (let i = 0; i <= passos; i++) {
-            celulas.push({
-                r: rInicio + (i * passoR),
-                c: cInicio + (i * passoC)
-            });
+            celulas.push({ r: rInicio + (i * passoR), c: cInicio + (i * passoC) });
         }
         estado.selecao.celulas = celulas;
         atualizarVisualSelecao(celulas);
@@ -393,7 +460,8 @@ function limparVisualSelecao() {
     document.querySelectorAll('.celula.selecionada').forEach(el => el.classList.remove('selecionada'));
 }
 
-/* --- VERIFICAÇÃO --- */
+/* --- VITÓRIA E UI --- */
+
 function verificarPalavra() {
     const palavraFormada = estado.selecao.celulas.map(coord => estado.grid[coord.r][coord.c]).join('');
     const match = estado.solucao.find(s =>
@@ -406,9 +474,12 @@ function verificarPalavra() {
 }
 
 function marcarPalavraEncontrada(objSolucao) {
-    estado.palavrasEncontradas.push(objSolucao.palavra);
+    if (!estado.palavrasEncontradas.includes(objSolucao.palavra)) {
+        estado.palavrasEncontradas.push(objSolucao.palavra);
+        salvarPalavraEncontrada(estado.nivelAtualObj.id, objSolucao.palavra);
+    }
 
-    // 1. Grid
+    // Grid e Risco
     const coords = objSolucao.coordenadas;
     coords.forEach(coord => {
         const el = document.querySelector(`.celula[data-r='${coord.r}'][data-c='${coord.c}']`);
@@ -416,17 +487,14 @@ function marcarPalavraEncontrada(objSolucao) {
     });
     desenharRisco(coords[0], coords[coords.length - 1]);
 
-    // 2. Texto (Risca todas as ocorrências)
-    const spansTexto = document.querySelectorAll(`span[data-word='${objSolucao.palavra}']`);
-    spansTexto.forEach(span => {
-        span.classList.add('riscada');
-    });
+    // Texto e Lista
+    document.querySelectorAll(`span[data-word='${objSolucao.palavra}']`)
+        .forEach(span => span.classList.add('riscada'));
 
-    // 3. Etiqueta (Se existir)
     const chip = document.querySelector(`.chip-palavra[data-target='${objSolucao.palavra}']`);
     if (chip) chip.classList.add('encontrada');
 
-    atualizarContador(); // Chama atualização segura
+    atualizarContador();
     verificarFimNivel();
 }
 
@@ -458,15 +526,11 @@ function desenharRisco(coordInicio, coordFim) {
 }
 
 function atualizarContador() {
-    // ATUALIZAÇÃO DE SEGURANÇA: Verifica se os elementos existem antes de tentar atualizar
-    // já que você removeu o contador do HTML.
     const total = estado.nivelAtualObj.palavras.length;
     const achadas = estado.palavrasEncontradas.length;
 
     const elContador = document.getElementById('contador-palavras');
-    if (elContador) {
-        elContador.innerText = `${achadas}/${total}`;
-    }
+    if (elContador) elContador.innerText = `${achadas}/${total}`;
 
     const elBarra = document.getElementById('barra-progresso');
     if (elBarra) {
@@ -483,8 +547,17 @@ function verificarFimNivel() {
     }
 }
 
-function voltarInicio() { location.reload(); }
-function proximoNivel() {
-    alert("Próximo nível em breve!");
-    document.getElementById('modal-vitoria').classList.add('oculto');
+function gerarPoolLetras() {
+    if (poolLetras.length > 0) return;
+    const total = ORDEM_FREQUENCIA.length;
+    for (let i = 0; i < total; i++) {
+        let peso = Math.max(1, 40 - i);
+        for (let j = 0; j < peso; j++) poolLetras.push(ORDEM_FREQUENCIA[i]);
+    }
 }
+
+function getLetraAleatoria() {
+    return poolLetras[Math.floor(Math.random() * poolLetras.length)].toUpperCase();
+}
+
+iniciar();
