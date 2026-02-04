@@ -3,10 +3,13 @@
     --bg: #f4f7f6;
     --grid-bg: #fff;
     --selected: #ffeaa7;
+    /* Amarelo suave para seleção */
     --found: #55efc4;
-    /* Cor da palavra achada no grid */
+    /* Verde Água para a palavra encontrada */
     --text-found: #aaa;
-    /* Cor do texto riscado */
+    /* Cor do texto riscado na história */
+    --text-highlight: #004d40;
+    /* Cor da letra quando encontrada (verde escuro) */
 }
 
 body {
@@ -19,6 +22,7 @@ body {
     align-items: center;
 }
 
+/* Container Principal */
 .container {
     width: 95%;
     max-width: 1200px;
@@ -32,6 +36,7 @@ body {
     flex-direction: column;
 }
 
+/* Utilitários de Visibilidade */
 .oculto {
     display: none !important;
 }
@@ -40,21 +45,29 @@ body {
     display: flex !important;
 }
 
-/* Tela Inicial */
+/* --- TELA INICIAL --- */
 #tela-inicio {
     align-items: center;
     justify-content: center;
     text-align: center;
+    height: 100%;
+}
+
+.selecao-dificuldade {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
 }
 
 .btn-dificuldade {
     padding: 15px 30px;
-    margin: 10px;
     font-size: 1.2rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s;
+    min-width: 120px;
 }
 
 .btn-dificuldade:hover {
@@ -76,21 +89,113 @@ body {
     color: #691b1b;
 }
 
-/* Layout do Jogo */
+/* --- NOVA TELA: SELEÇÃO DE NÍVEIS (Faltava isso no seu arquivo) --- */
+#tela-niveis {
+    flex-direction: column;
+}
+
+.barra-topo-simples {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.grid-niveis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.card-nivel {
+    background: white;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card-nivel:hover:not(.bloqueado) {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-nivel h3 {
+    margin: 0 0 5px 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.card-nivel p {
+    margin: 0;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.card-nivel.bloqueado {
+    background: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #ddd;
+}
+
+.card-nivel.concluido {
+    background-color: #eafff9;
+    border-color: var(--found);
+}
+
+.card-nivel.nivel-final {
+    grid-column: 1 / -1;
+    /* Ocupa a linha toda */
+    background: linear-gradient(135deg, #fff 0%, #fff8e1 100%);
+    border-color: #ffd700;
+}
+
+.icon-cadeado {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.progresso-texto {
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.btn-voltar {
+    background: none;
+    border: 2px solid #ddd;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* --- TELA DO JOGO --- */
 .barra-topo {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     padding-bottom: 10px;
     border-bottom: 1px solid #eee;
 }
 
+.info-nivel {
+    text-align: right;
+}
+
 .progresso-container {
-    width: 200px;
-    height: 10px;
+    width: 150px;
+    height: 8px;
     background: #ddd;
-    border-radius: 5px;
+    border-radius: 4px;
     overflow: hidden;
     margin-top: 5px;
 }
@@ -99,79 +204,155 @@ body {
     height: 100%;
     background: var(--found);
     width: 0%;
-    transition: width 0.3s;
+    transition: width 0.5s;
 }
 
 .area-jogo {
     display: flex;
     flex: 1;
-    gap: 30px;
+    gap: 20px;
     overflow: hidden;
-    /* Evita scroll na página toda */
+    /* Evita scroll duplo */
 }
 
-/* Lado Esquerdo - Grid */
+/* --- LADO ESQUERDO (GRID) --- */
 .painel-esquerdo {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #fafafa;
+    border-radius: 10px;
+}
+
+/* Container do Grid + Riscos */
+#container-grid {
+    position: relative;
+    /* Referência para os riscos absolutos */
+    display: inline-block;
+    /* IMPORTANTE: Padding 0 para garantir que o cálculo JS de posição seja exato */
+    padding: 0;
+    margin: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 #grid-cacapalavras {
     display: grid;
-    /* As colunas serão definidas dinamicamente no JS */
-    gap: 2px;
+    gap: 0;
+    /* Letras coladas */
+    padding: 10px;
+    /* Padding interno do grid apenas */
     user-select: none;
-    /* Impede seleção de texto nativa */
+    position: relative;
+    z-index: 1;
 }
 
+/* Estilo das Células */
 .celula {
     width: 35px;
     height: 35px;
-    background: #f9f9f9;
-    border: 1px solid #eee;
+    background: #fff;
+    /* Truque para borda simples */
+    box-shadow: inset 1px 1px 0 #eee;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    /* Fica acima do risco */
+    transition: background-color 0.1s;
 }
 
+/* Limpa pseudo-elementos antigos para evitar "gomos" */
+.celula::before,
+.celula::after {
+    content: none !important;
+}
+
+/* Ao arrastar o mouse */
 .celula.selecionada {
     background-color: var(--selected);
 }
 
+/* Palavra encontrada (apenas muda cor da letra) */
 .celula.encontrada {
-    background-color: var(--found);
-    color: #006644;
+    color: var(--text-highlight);
+    background-color: transparent !important;
+    font-weight: 900;
 }
 
-/* Lado Direito - Texto */
+/* --- CAMADA DE RISCOS (OVERLAY) --- */
+#camada-riscos {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Deixa clicar através */
+    z-index: 5;
+    /* Fica ENTRE o fundo e o texto da célula */
+}
+
+.risco-palavra {
+    position: absolute;
+    background-color: var(--found);
+    height: 30px;
+    /* Um pouco menor que a célula (35px) para elegância */
+    border-radius: 15px;
+    /* Bem redondo */
+    opacity: 0.6;
+    /* Transparência marca-texto */
+    mix-blend-mode: multiply;
+    /* Mescla com a letra preta */
+    transform-origin: center center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* --- LADO DIREITO (HISTÓRIA) --- */
 .painel-direito {
     flex: 1;
     overflow-y: auto;
-    padding-right: 10px;
+    padding: 10px 20px;
+    background: #fff;
+    border-left: 1px solid #eee;
+}
+
+#titulo-historia {
+    margin-top: 0;
+    color: var(--primary);
+}
+
+#conteudo-texto {
     font-size: 1.1rem;
-    line-height: 1.6;
+    line-height: 1.8;
+    color: #444;
 }
 
-/* Efeito da palavra encontrada no texto */
-.palavra-texto {
-    transition: all 0.5s;
+/* Destaque Modo Fácil */
+.texto-historia.modo-facil span[data-word] {
     font-weight: bold;
-    padding: 0 2px;
-    border-radius: 3px;
+    color: #e67e22;
+    background-color: #fff3e0;
+    padding: 0 4px;
+    border-radius: 4px;
 }
 
+/* Palavra encontrada no texto */
 .palavra-texto.riscada {
     text-decoration: line-through;
     color: var(--text-found);
-    background-color: transparent;
+    background: none;
+    font-weight: normal;
+    opacity: 0.6;
 }
 
-/* Modal */
+/* --- MODAL --- */
 .modal {
     position: fixed;
     top: 0;
@@ -182,12 +363,55 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .modal-conteudo {
     background: white;
     padding: 40px;
-    border-radius: 10px;
+    border-radius: 15px;
     text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 90%;
+}
+
+.modal h2 {
+    color: var(--found);
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+#btn-proximo {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+#btn-proximo:hover {
+    background: #357abd;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .area-jogo {
+        flex-direction: column-reverse;
+    }
+
+    .painel-direito {
+        max-height: 200px;
+        border-left: none;
+        border-top: 1px solid #eee;
+    }
+
+    .celula {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
 }

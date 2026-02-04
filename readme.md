@@ -51,7 +51,7 @@ O projeto é uma SPA (Single Page Application) leve, sem dependências de build 
 
 * [x] Estrutura Visual (HTML/CSS)
 * [x] Configuração de Dificuldade e Frequência de Letras
-* [ ] Implementação do Gerador de Grid (Posicionamento de palavras)
-* [ ] Interação de arrastar/selecionar (Mouse e Touch)
+* [x] Implementação do Gerador de Grid (Posicionamento de palavras)
+* [x] Interação de arrastar/selecionar (Mouse e Touch)
 * [ ] Banco de Dados de Histórias (JSON)
 * [ ] Sistema de Save (LocalStorage) e Desbloqueio de Níveis
