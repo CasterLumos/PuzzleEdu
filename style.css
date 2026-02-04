@@ -1,0 +1,193 @@
+:root {
+    --primary: #4a90e2;
+    --bg: #f4f7f6;
+    --grid-bg: #fff;
+    --selected: #ffeaa7;
+    --found: #55efc4;
+    /* Cor da palavra achada no grid */
+    --text-found: #aaa;
+    /* Cor do texto riscado */
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.oculto {
+    display: none !important;
+}
+
+.visivel {
+    display: flex !important;
+}
+
+/* Tela Inicial */
+#tela-inicio {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-dificuldade {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-dificuldade:hover {
+    transform: scale(1.05);
+}
+
+.facil {
+    background-color: #a8e6cf;
+    color: #1b4d3e;
+}
+
+.medio {
+    background-color: #ffd3b6;
+    color: #5d4037;
+}
+
+.dificil {
+    background-color: #ffaaa5;
+    color: #691b1b;
+}
+
+/* Layout do Jogo */
+.barra-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.progresso-container {
+    width: 200px;
+    height: 10px;
+    background: #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+}
+
+#barra-progresso {
+    height: 100%;
+    background: var(--found);
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.area-jogo {
+    display: flex;
+    flex: 1;
+    gap: 30px;
+    overflow: hidden;
+    /* Evita scroll na página toda */
+}
+
+/* Lado Esquerdo - Grid */
+.painel-esquerdo {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#grid-cacapalavras {
+    display: grid;
+    /* As colunas serão definidas dinamicamente no JS */
+    gap: 2px;
+    user-select: none;
+    /* Impede seleção de texto nativa */
+}
+
+.celula {
+    width: 35px;
+    height: 35px;
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.celula.selecionada {
+    background-color: var(--selected);
+}
+
+.celula.encontrada {
+    background-color: var(--found);
+    color: #006644;
+}
+
+/* Lado Direito - Texto */
+.painel-direito {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Efeito da palavra encontrada no texto */
+.palavra-texto {
+    transition: all 0.5s;
+    font-weight: bold;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.palavra-texto.riscada {
+    text-decoration: line-through;
+    color: var(--text-found);
+    background-color: transparent;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.modal-conteudo {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+}
