@@ -22,43 +22,43 @@ const NIVEIS_RAW = [
     {
         id: 1,
         titulo: "O Mundo dos Besouros",
-        imagem: "/assets/2.png",
+        imagem: "assets/2.png",
         textoPuro: "Existem besouros de todos os tipos. A família das joaninhas traz sorte e ajuda no controle biológico. Já os escaravelhos eram sagrados no Egito Antigo. Alguns besouros se fingem de mortos quando ameaçados e outros, como o gigante, possuem mandíbulas muito fortes."
     },
     {
         id: 2,
         titulo: "As Minhocas",
-        imagem: "/assets/3.png",
+        imagem: "assets/3.png",
         textoPuro: "As minhocas são anelídeos de corpo cilíndrico que vivem na terra. Elas são muito importantes para o solo, deixando a terra fofa e arejada. Além disso, produzem o húmus, que é um excelente adubo natural para as plantas crescerem fortes."
     },
     {
         id: 3,
         titulo: "Borboletas e Mariposas",
-        imagem: "/assets/4.png",
+        imagem: "assets/4.png",
         textoPuro: "As borboletas são coloridas e voam durante o dia, enquanto as mariposas preferem a noite. Ambas são importantes polinizadoras. Ao se alimentar do néctar, elas carregam o pólen que ajuda na reprodução de muitas flores e plantas da natureza."
     },
     {
         id: 4,
         titulo: "O Exército de Formigas",
-        imagem: "/assets/5.png",
+        imagem: "assets/5.png",
         textoPuro: "As formigas são insetos muito fortes que podem carregar até cinquenta vezes o seu próprio peso. Elas vivem em sociedades organizadas onde cada uma tem sua tarefa. Usam suas antenas para cheirar e se comunicar com as outras companheiras do formigueiro."
     },
     {
         id: 5,
         titulo: "O Cupim",
-        imagem: "/assets/6.png",
+        imagem: "assets/6.png",
         textoPuro: "Os cupins vivem em colônias com rei, rainha e soldados. Eles são conhecidos por comer madeira rapidamente e podem construir ninhos gigantes. Na época de chuva, os cupins alados saem em revoada perto das lâmpadas para tentar fundar novas colônias."
     },
     {
         id: 6,
         titulo: "Tatu de Jardim",
-        imagem: "/assets/7.png",
+        imagem: "assets/7.png",
         textoPuro: "O tatuzinho de jardim não é um inseto, mas sim um crustáceo terrestre, parente do camarão. Ele precisa de umidade para viver e tem uma defesa especial: quando se sente ameaçado, ele se enrola todo e vira uma bolinha dura para se proteger."
     },
     {
         id: 7,
         titulo: "Grilos e Gafanhotos",
-        imagem: "/assets/8.png",
+        imagem: "assets/8.png",
         textoPuro: "Você sabe a diferença? O grilo tem antenas longas e gosta da noite, fazendo seu som esfregando as asas. Já o gafanhoto tem antenas curtas, prefere o dia e canta esfregando as pernas. A esperança costuma ser verde e parece uma folha."
     }
 ];
