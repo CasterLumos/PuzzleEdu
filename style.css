@@ -457,3 +457,43 @@ span[data-word].riscada {
     text-decoration: line-through;
     opacity: 0.7;
 }
+
+/* --- ESTILOS DAS IMAGENS --- */
+
+/* Imagem da Capa (Tela Inicial) */
+.capa-jogo {
+    max-width: 100%;
+    height: auto;
+    max-height: 250px;
+    /* Limita a altura em telas grandes */
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 4px solid #fff;
+    /* Moldura branca */
+    object-fit: cover;
+}
+
+/* Imagem do Nível (Painel Direito) */
+.imagem-nivel {
+    height: 180px;
+    /* Altura fixa para manter padrão */
+    object-fit: cover;
+    /* Corta a imagem para preencher o espaço sem esticar */
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 3px solid var(--primary);
+    /* Moldura azul temática */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Ajuste no painel direito para acomodar a imagem */
+.painel-direito {
+    padding-top: 0;
+    /* Remove padding superior para a imagem encostar no topo */
+}
+
+/* Garante que a imagem suma se tiver a classe oculto */
+.imagem-nivel.oculto {
+    display: none;
+}

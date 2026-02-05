@@ -22,40 +22,46 @@ const NIVEIS_RAW = [
     {
         id: 1,
         titulo: "O Mundo dos Besouros",
+        imagem: "/assets/2.png",
         textoPuro: "Existem besouros de todos os tipos. A família das joaninhas traz sorte e ajuda no controle biológico. Já os escaravelhos eram sagrados no Egito Antigo. Alguns besouros se fingem de mortos quando ameaçados e outros, como o gigante, possuem mandíbulas muito fortes."
     },
     {
         id: 2,
         titulo: "As Minhocas",
+        imagem: "/assets/3.png",
         textoPuro: "As minhocas são anelídeos de corpo cilíndrico que vivem na terra. Elas são muito importantes para o solo, deixando a terra fofa e arejada. Além disso, produzem o húmus, que é um excelente adubo natural para as plantas crescerem fortes."
     },
     {
         id: 3,
         titulo: "Borboletas e Mariposas",
+        imagem: "/assets/4.png",
         textoPuro: "As borboletas são coloridas e voam durante o dia, enquanto as mariposas preferem a noite. Ambas são importantes polinizadoras. Ao se alimentar do néctar, elas carregam o pólen que ajuda na reprodução de muitas flores e plantas da natureza."
     },
     {
         id: 4,
         titulo: "O Exército de Formigas",
+        imagem: "/assets/5.png",
         textoPuro: "As formigas são insetos muito fortes que podem carregar até cinquenta vezes o seu próprio peso. Elas vivem em sociedades organizadas onde cada uma tem sua tarefa. Usam suas antenas para cheirar e se comunicar com as outras companheiras do formigueiro."
     },
     {
         id: 5,
         titulo: "O Cupim",
+        imagem: "/assets/6.png",
         textoPuro: "Os cupins vivem em colônias com rei, rainha e soldados. Eles são conhecidos por comer madeira rapidamente e podem construir ninhos gigantes. Na época de chuva, os cupins alados saem em revoada perto das lâmpadas para tentar fundar novas colônias."
     },
     {
         id: 6,
         titulo: "Tatu de Jardim",
+        imagem: "/assets/7.png",
         textoPuro: "O tatuzinho de jardim não é um inseto, mas sim um crustáceo terrestre, parente do camarão. Ele precisa de umidade para viver e tem uma defesa especial: quando se sente ameaçado, ele se enrola todo e vira uma bolinha dura para se proteger."
     },
     {
         id: 7,
         titulo: "Grilos e Gafanhotos",
+        imagem: "/assets/8.png",
         textoPuro: "Você sabe a diferença? O grilo tem antenas longas e gosta da noite, fazendo seu som esfregando as asas. Já o gafanhoto tem antenas curtas, prefere o dia e canta esfregando as pernas. A esperança costuma ser verde e parece uma folha."
     }
 ];
-
 /* --- ESTADO DO JOGO --- */
 let estado = {
     dificuldade: 'facil',
@@ -79,45 +85,59 @@ function salvarPalavraEncontrada(idNivel, palavra) {
 
     if (!progresso[idNivel]) progresso[idNivel] = [];
 
+    // Salva no histórico global para desbloquear níveis futuros
     if (!progresso[idNivel].includes(palavra)) {
         progresso[idNivel].push(palavra);
         localStorage.setItem(key, JSON.stringify(progresso));
     }
 }
 
-/* --- ENGINE DINÂMICA --- */
+/* --- ENGINE DINÂMICA (SEM DUPLICATAS) --- */
 function processarNivelDinamico(nivelBruto) {
     const texto = nivelBruto.textoPuro;
     const frases = texto.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [texto];
 
+    // 1. Extrai candidatos por frase
     let gruposDeFrases = frases.map((frase) => {
         const palavrasLimpas = frase
             .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
             .split(/\s+/)
             .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
+
+        // Remove duplicatas DENTRO da própria frase
         return { palavras: [...new Set(palavrasLimpas)] };
     }).filter(g => g.palavras.length > 0);
 
     const palavrasSelecionadas = [];
-    const maxPalavras = 8; // Busca até 8 palavras
+    const maxPalavras = 8;
+
+    // Conjunto auxiliar para garantir unicidade rápida
+    const palavrasSet = new Set();
 
     let tentativas = 0;
-    while (palavrasSelecionadas.length < maxPalavras && tentativas < 40) {
-        gruposDeFrases.sort(() => 0.5 - Math.random());
+    while (palavrasSelecionadas.length < maxPalavras && tentativas < 50) {
+        gruposDeFrases.sort(() => 0.5 - Math.random()); // Embaralha
+
         for (let grupo of gruposDeFrases) {
-            if (palavrasSelecionadas.length >= maxPalavras) break;
+            if (palavrasSet.size >= maxPalavras) break;
+
             if (grupo.palavras.length > 0) {
                 const randIndex = Math.floor(Math.random() * grupo.palavras.length);
-                const palavra = grupo.palavras[randIndex].toUpperCase();
-                if (!palavrasSelecionadas.includes(palavra)) {
-                    palavrasSelecionadas.push(palavra);
+                const palavraOriginal = grupo.palavras[randIndex];
+                const palavraUpper = palavraOriginal.toUpperCase();
+
+                // VERIFICAÇÃO DE DUPLICIDADE
+                if (!palavrasSet.has(palavraUpper)) {
+                    palavrasSet.add(palavraUpper);
+                    palavrasSelecionadas.push(palavraUpper);
+                    grupo.palavras.splice(randIndex, 1);
                 }
-                grupo.palavras.splice(randIndex, 1);
             }
         }
         tentativas++;
     }
 
+    // 2. Injeção no HTML
     let textoProcessado = texto;
     palavrasSelecionadas.forEach(palavra => {
         const regex = new RegExp(`\\b${palavra}\\b`, 'gi');
@@ -132,6 +152,7 @@ function processarNivelDinamico(nivelBruto) {
     return {
         id: nivelBruto.id,
         titulo: nivelBruto.titulo,
+        imagem: nivelBruto.imagem,
         texto: textoProcessado,
         palavras: palavrasSelecionadas,
         tamanho: tamanhoGrid
@@ -168,29 +189,19 @@ function renderizarMenuNiveis() {
     container.innerHTML = '';
     const progressoSalvo = getProgressoSalvo();
 
-    let niveisAnterioresCompletos = true;
-
     NIVEIS_RAW.forEach((nivelRaw, index) => {
-        // Processa levemente para saber total estimado (pode variar se for aleatório, 
-        // mas assumimos média de 8 para cálculo visual)
+        // Cálculo de progresso para o MENU (baseado no histórico salvo)
         const achadas = progressoSalvo[nivelRaw.id] || [];
-        // Estimativa para barra de progresso do menu
         const porcentagem = Math.min(100, Math.floor((achadas.length / 8) * 100));
 
-        // Lógica de Bloqueio
         let bloqueado = true;
-        let motivo = "";
-
         if (index === 0) {
             bloqueado = false;
         } else {
-            // Verifica o anterior
             const idAnterior = NIVEIS_RAW[index - 1].id;
             const achadasAnterior = (progressoSalvo[idAnterior] || []).length;
-
-            // Regra: Precisa de pelo menos 6 palavras (aprox 75% de 8) para liberar o próximo
+            // Regra: Precisa de aprox 6 palavras para liberar o próximo
             if (achadasAnterior >= 6) bloqueado = false;
-            else motivo = "Complete o anterior";
         }
 
         const card = document.createElement('div');
@@ -211,7 +222,7 @@ function renderizarMenuNiveis() {
     });
 }
 
-/* --- CARREGAMENTO DO JOGO --- */
+/* --- CARREGAMENTO DO JOGO (MODO REPLAY) --- */
 
 function carregarNivel(idNivel) {
     document.getElementById('tela-niveis').classList.replace('visivel', 'oculto');
@@ -223,19 +234,29 @@ function carregarNivel(idNivel) {
 
     estado.nivelAtualObj = nivelProcessado;
 
-    // Recupera Save
-    const progresso = getProgressoSalvo();
-    estado.palavrasEncontradas = progresso[idNivel] || [];
+    // --- ALTERAÇÃO IMPORTANTE: RESET DE SESSÃO ---
+    // Começamos o nível zerado para o jogador poder jogar novamente.
+    // O progresso histórico continua no localStorage, mas não é carregado visualmente.
+    estado.palavrasEncontradas = [];
 
-    // UI
+    // Imagem
+    const imgNivel = document.getElementById('imagem-nivel');
+    if (nivelProcessado.imagem) {
+        imgNivel.src = nivelProcessado.imagem;
+        imgNivel.classList.remove('oculto');
+    } else {
+        imgNivel.classList.add('oculto');
+    }
+
+    // Textos
     document.getElementById('titulo-historia').innerText = nivelProcessado.titulo;
     document.getElementById('nivel-atual').innerText = nivelProcessado.titulo;
 
-    // Destaques e Listas baseados na Dificuldade
     const containerTexto = document.getElementById('conteudo-texto');
     const containerLista = document.getElementById('lista-palavras');
     containerTexto.innerHTML = nivelProcessado.texto;
 
+    // Regras de Dificuldade
     if (estado.dificuldade === 'facil' || estado.dificuldade === 'medio') {
         containerTexto.classList.add('modo-facil');
     } else {
@@ -248,24 +269,11 @@ function carregarNivel(idNivel) {
         containerLista.innerHTML = '';
     }
 
-    // Marca palavras já encontradas (Save)
-    setTimeout(restaurarEstadoVisual, 100);
+    // NOTA: Removemos o restaurarEstadoVisual() para que o jogo comece limpo.
 
     gerarMatrizGrid(nivelProcessado, estado.dificuldade);
     renderizarGrid();
     atualizarContador();
-}
-
-function restaurarEstadoVisual() {
-    estado.palavrasEncontradas.forEach(palavra => {
-        // Risca Texto
-        document.querySelectorAll(`span[data-word='${palavra}']`)
-            .forEach(span => span.classList.add('riscada'));
-
-        // Risca Lista (se existir)
-        const chip = document.querySelector(`.chip-palavra[data-target='${palavra}']`);
-        if (chip) chip.classList.add('encontrada');
-    });
 }
 
 function renderizarListaPalavras(listaPalavras) {
@@ -276,10 +284,6 @@ function renderizarListaPalavras(listaPalavras) {
         chip.className = 'chip-palavra';
         chip.innerText = palavra;
         chip.dataset.target = palavra;
-        // Se já foi achada antes, marca
-        if (estado.palavrasEncontradas.includes(palavra)) {
-            chip.classList.add('encontrada');
-        }
         container.appendChild(chip);
     });
 }
@@ -393,17 +397,6 @@ function renderizarGrid() {
         });
     });
 
-    // Riscar no grid palavras já encontradas (Save)
-    estado.solucao.forEach(sol => {
-        if (estado.palavrasEncontradas.includes(sol.palavra)) {
-            sol.coordenadas.forEach(coord => {
-                const el = document.querySelector(`.celula[data-r='${coord.r}'][data-c='${coord.c}']`);
-                if (el) el.classList.add('encontrada');
-            });
-            desenharRisco(sol.coordenadas[0], sol.coordenadas[sol.coordenadas.length - 1]);
-        }
-    });
-
     document.body.addEventListener('mouseup', () => {
         if (estado.selecao.ativo) finalizarSelecao();
     });
@@ -476,10 +469,10 @@ function verificarPalavra() {
 function marcarPalavraEncontrada(objSolucao) {
     if (!estado.palavrasEncontradas.includes(objSolucao.palavra)) {
         estado.palavrasEncontradas.push(objSolucao.palavra);
+        // Salva no banco de dados, mas não interfere no jogo atual se for replay
         salvarPalavraEncontrada(estado.nivelAtualObj.id, objSolucao.palavra);
     }
 
-    // Grid e Risco
     const coords = objSolucao.coordenadas;
     coords.forEach(coord => {
         const el = document.querySelector(`.celula[data-r='${coord.r}'][data-c='${coord.c}']`);
@@ -487,7 +480,6 @@ function marcarPalavraEncontrada(objSolucao) {
     });
     desenharRisco(coords[0], coords[coords.length - 1]);
 
-    // Texto e Lista
     document.querySelectorAll(`span[data-word='${objSolucao.palavra}']`)
         .forEach(span => span.classList.add('riscada'));
 
