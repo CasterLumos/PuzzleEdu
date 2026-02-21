@@ -1,43 +1,42 @@
-# 🧩 PuzzleEdu - Sistema Educacional
+# 🧩 PuzzleEdu - Engine de Jogos Educacionais
 
-Um jogo de caça-palavras narrativo desenvolvido com tecnologias web padrão (HTML5, CSS3, JavaScript Vanilla). O objetivo é unir o incentivo à leitura com a mecânica clássica de puzzles.
+Uma plataforma web leve e flexível para criar jogos de caça-palavras narrativos. O objetivo é unir o incentivo à leitura com a mecânica clássica de puzzles, permitindo múltiplas "aventuras" temáticas.
 
 ## 📋 Funcionalidades Principais
 
-- **Narrativa Integrada:** Ao lado de cada quebra-cabeça, há uma história onde as palavras a serem encontradas estão contextualizadas.
-- **Sistema de Progresso:**
-  - **Desbloqueio:** O próximo nível é liberado ao encontrar **75%** das palavras do nível atual.
-  - **Nível Final:** Um nível especial só aparece se o jogador completar **100%** de todos os níveis anteriores.
-- **Feedback Visual:** As palavras são riscadas no texto da história automaticamente ao serem encontradas no grid.
+- **Múltiplos Temas (Aventuras):** Sistema dinâmico que permite trocar o tema do jogo (ex: "Mini Bichos", "Desertos") instantaneamente via menu.
+- **Narrativa Ilustrada:**
+  - Cada nível possui um texto educativo contextualizado.
+  - Suporte a imagens de capa para a aventura e ilustrações específicas para cada nível.
+- **Sistema de Progresso Inteligente:**
+  - **Desbloqueio:** O próximo nível é liberado ao encontrar palavras suficientes no nível anterior.
+  - **Save Local:** O progresso de cada tema e dificuldade é salvo independentemente no navegador (LocalStorage).
+- **Engine Dinâmica:**
+  - O jogo é gerado automaticamente a partir de arquivos JSON externos.
+  - Algoritmo que prioriza palavras-chave do título (ex: nome do animal) no grid.
 
 ## ⚙️ Regras de Dificuldade
 
 O sistema ajusta a complexidade da geração do grid com base na seleção do usuário:
 
-| Dificuldade | Direções Permitidas | Palavras Invertidas |
-|:-----------:|:-------------------:|:-------------------:|
-| **Fácil** | Horizontal, Vertical | Não |
-| **Médio** | Horizontal, Vertical, Diagonal | Não |
-| **Difícil** | Horizontal, Vertical, Diagonal | Sim |
-
-## 🧮 Algoritmo de Preenchimento (Frequência PT-BR)
-
-Para aumentar o desafio e a naturalidade do jogo, os espaços vazios do grid **não são preenchidos aleatoriamente**.
-
-Utilizamos um algoritmo de "Pool Ponderado" baseado na frequência das letras na língua portuguesa.
-- **Ordem de Frequência:** `aeosridmntcuvlpgqbfhãôâçêjéóxúíáàwky`
-- **Lógica:** A letra "A" tem ~40x mais chance de aparecer como preenchimento do que a letra "Y". Isso camufla as palavras reais, pois o grid visualmente se assemelha a palavras portuguesas reais.
+| Dificuldade | Direções Permitidas | Visibilidade da Lista | Destaque no Texto |
+|:-----------:|:-------------------:|:---------------------:|:-----------------:|
+| **Fácil** | Horizontal, Vertical | ✅ Visível | ✅ Sim |
+| **Médio** | Horiz, Vert, Diagonal | ❌ Oculta | ✅ Sim |
+| **Difícil** | Horiz, Vert, Diag, Invertidas | ❌ Oculta | ❌ Não |
 
 ## 🛠️ Estrutura do Projeto
 
-O projeto é uma SPA (Single Page Application) leve, sem dependências de build (como Webpack ou React).
+O projeto é uma SPA (Single Page Application) modular, sem dependências de build.
 
 ```text
 /
-├── index.html   # Estrutura DOM (Telas de Início e Jogo)
-├── style.css    # Estilização, Grid Layout e Responsividade
-├── script.js    # Lógica do jogo, geração de grid e estado
-└── README.md    # Documentação
+├── assets/              # Imagens organizadas por tema (1, 2...)
+├── niveis/              # Dados JSON de cada aventura (1, 2...)
+├── index.html           # Estrutura DOM
+├── style.css            # Estilização e Responsividade
+├── script.js            # Engine do jogo e gerenciador de estado
+└── README.md            # Documentação
 
 ```
 
@@ -45,16 +44,17 @@ O projeto é uma SPA (Single Page Application) leve, sem dependências de build 
 
 1. Clone este repositório.
 2. Abra o arquivo `index.html` em qualquer navegador moderno.
-3. Não é necessário servidor local (Live Server é opcional, mas recomendado).
+* **Nota:** Para carregar os arquivos JSON corretamente, recomenda-se usar o **Live Server** do VS Code ou hospedar no GitHub Pages (devido a políticas de segurança CORS dos navegadores).
 
-## 📝 Próximos Passos (Roadmap)
+
+
+## 📝 Histórico de Desenvolvimento (Roadmap)
 
 * [x] Estrutura Visual (HTML/CSS)
 * [x] Configuração de Dificuldade e Frequência de Letras
-* [x] Implementação do Gerador de Grid (Posicionamento e Cruzamentos)
 * [x] Engine Dinâmica (Gera o jogo a partir de texto puro)
-* [x] Banco de Dados de Histórias (10 Níveis Completos)
-* [x] Lógica de Dificuldade (Visibilidade de Lista e Destaques)
-* [x] Sistema de Save (LocalStorage) e Replay (Reset de sessão)
+* [x] Conteúdo Educativo: "Mini Bichos" e "Bichos dos Desertos"
+* [x] Interface Rica: Capas, imagens por nível e seletor de temas
+* [x] Sistema de Save (LocalStorage) com suporte a múltiplos temas
 * [x] Menu de Capítulos com Sistema de Bloqueio (Cadeados)
-* [ ] Refatoração: Mover dados para arquivo JSON externo (Opcional)
+* [x] Refatoração: Arquitetura baseada em JSON externo e Assets locais

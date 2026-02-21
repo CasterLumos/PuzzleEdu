@@ -497,3 +497,37 @@ span[data-word].riscada {
 .imagem-nivel.oculto {
     display: none;
 }
+
+/* --- SELETOR DE AVENTURA --- */
+.seletor-aventura {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #f4f7f6;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 2px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+}
+
+.seletor-aventura select {
+    border: none;
+    background: transparent;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--primary);
+    cursor: pointer;
+    outline: none;
+}
+
+/* Responsividade: No celular, tira do topo absoluto e centraliza para não sobrepor o título */
+@media (max-width: 600px) {
+    .seletor-aventura {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 15px;
+        align-self: center;
+    }
+}

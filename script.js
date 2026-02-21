@@ -1,3 +1,7 @@
+/* --- CONFIGURAÇÃO DE TEMA --- */
+// Tenta carregar o tema salvo no navegador; se não existir, usa o 1 (Mini Bichos) por padrão
+let TEMA_ATUAL = parseInt(localStorage.getItem('puzzle_tema_selecionado')) || 1;
+
 /* --- CONFIGURAÇÕES E CONSTANTES --- */
 const DIRECOES = {
     facil: [{ x: 1, y: 0 }, { x: 0, y: 1 }],
@@ -17,51 +21,6 @@ const PALAVRAS_IGNORADAS = [
     "ela", "ele", "eles", "elas", "isso", "aquilo", "este", "esta", "sua", "seu"
 ];
 
-/* --- BANCO DE DADOS: MINI BICHOS --- */
-const NIVEIS_RAW = [
-    {
-        id: 1,
-        titulo: "O Mundo dos Besouros",
-        imagem: "assets/2.png",
-        textoPuro: "Existem besouros de todos os tipos. A família das joaninhas traz sorte e ajuda no controle biológico. Já os escaravelhos eram sagrados no Egito Antigo. Alguns besouros se fingem de mortos quando ameaçados e outros, como o gigante, possuem mandíbulas muito fortes."
-    },
-    {
-        id: 2,
-        titulo: "As Minhocas",
-        imagem: "assets/3.png",
-        textoPuro: "As minhocas são anelídeos de corpo cilíndrico que vivem na terra. Elas são muito importantes para o solo, deixando a terra fofa e arejada. Além disso, produzem o húmus, que é um excelente adubo natural para as plantas crescerem fortes."
-    },
-    {
-        id: 3,
-        titulo: "Borboletas e Mariposas",
-        imagem: "assets/4.png",
-        textoPuro: "As borboletas são coloridas e voam durante o dia, enquanto as mariposas preferem a noite. Ambas são importantes polinizadoras. Ao se alimentar do néctar, elas carregam o pólen que ajuda na reprodução de muitas flores e plantas da natureza."
-    },
-    {
-        id: 4,
-        titulo: "O Exército de Formigas",
-        imagem: "assets/5.png",
-        textoPuro: "As formigas são insetos muito fortes que podem carregar até cinquenta vezes o seu próprio peso. Elas vivem em sociedades organizadas onde cada uma tem sua tarefa. Usam suas antenas para cheirar e se comunicar com as outras companheiras do formigueiro."
-    },
-    {
-        id: 5,
-        titulo: "O Cupim",
-        imagem: "assets/6.png",
-        textoPuro: "Os cupins vivem em colônias com rei, rainha e soldados. Eles são conhecidos por comer madeira rapidamente e podem construir ninhos gigantes. Na época de chuva, os cupins alados saem em revoada perto das lâmpadas para tentar fundar novas colônias."
-    },
-    {
-        id: 6,
-        titulo: "Tatu de Jardim",
-        imagem: "assets/7.png",
-        textoPuro: "O tatuzinho de jardim não é um inseto, mas sim um crustáceo terrestre, parente do camarão. Ele precisa de umidade para viver e tem uma defesa especial: quando se sente ameaçado, ele se enrola todo e vira uma bolinha dura para se proteger."
-    },
-    {
-        id: 7,
-        titulo: "Grilos e Gafanhotos",
-        imagem: "assets/8.png",
-        textoPuro: "Você sabe a diferença? O grilo tem antenas longas e gosta da noite, fazendo seu som esfregando as asas. Já o gafanhoto tem antenas curtas, prefere o dia e canta esfregando as pernas. A esperança costuma ser verde e parece uma folha."
-    }
-];
 /* --- ESTADO DO JOGO --- */
 let estado = {
     dificuldade: 'facil',
@@ -74,18 +33,17 @@ let estado = {
 
 /* --- SISTEMA DE SAVE (LOCALSTORAGE) --- */
 function getProgressoSalvo() {
-    const key = `puzzle_mini_bichos_${estado.dificuldade}`;
+    const key = `puzzle_tema_${TEMA_ATUAL}_${estado.dificuldade}`;
     const salvo = localStorage.getItem(key);
     return salvo ? JSON.parse(salvo) : {};
 }
 
 function salvarPalavraEncontrada(idNivel, palavra) {
-    const key = `puzzle_mini_bichos_${estado.dificuldade}`;
+    const key = `puzzle_tema_${TEMA_ATUAL}_${estado.dificuldade}`;
     let progresso = getProgressoSalvo();
 
     if (!progresso[idNivel]) progresso[idNivel] = [];
 
-    // Salva no histórico global para desbloquear níveis futuros
     if (!progresso[idNivel].includes(palavra)) {
         progresso[idNivel].push(palavra);
         localStorage.setItem(key, JSON.stringify(progresso));
@@ -93,30 +51,46 @@ function salvarPalavraEncontrada(idNivel, palavra) {
 }
 
 /* --- ENGINE DINÂMICA (SEM DUPLICATAS) --- */
+/* --- ENGINE DINÂMICA (COM PALAVRAS OBRIGATÓRIAS) --- */
 function processarNivelDinamico(nivelBruto) {
     const texto = nivelBruto.textoPuro;
     const frases = texto.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [texto];
 
-    // 1. Extrai candidatos por frase
+    const palavrasSelecionadas = [];
+    const maxPalavras = 8;
+    const palavrasSet = new Set();
+
+    // 1. FORÇAR NOME DO ANIMAL (Palavras-chave do Título)
+    // Extrai palavras do título ignorando as pequenas (o, a, de)
+    const palavrasDoTitulo = nivelBruto.titulo
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .split(/\s+/)
+        .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
+
+    palavrasDoTitulo.forEach(palavra => {
+        const pUpper = palavra.toUpperCase();
+        // Verifica se essa palavra do título realmente existe dentro do texto da história
+        const regexVerificaNoTexto = new RegExp(`\\b${palavra}\\b`, 'i');
+
+        if (regexVerificaNoTexto.test(texto) && !palavrasSet.has(pUpper)) {
+            palavrasSet.add(pUpper);
+            palavrasSelecionadas.push(pUpper);
+        }
+    });
+
+    // 2. Extrai candidatos do resto do texto para preencher as vagas restantes
     let gruposDeFrases = frases.map((frase) => {
         const palavrasLimpas = frase
             .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
             .split(/\s+/)
             .filter(p => p.length > 3 && !PALAVRAS_IGNORADAS.includes(p.toLowerCase()));
 
-        // Remove duplicatas DENTRO da própria frase
         return { palavras: [...new Set(palavrasLimpas)] };
     }).filter(g => g.palavras.length > 0);
 
-    const palavrasSelecionadas = [];
-    const maxPalavras = 8;
-
-    // Conjunto auxiliar para garantir unicidade rápida
-    const palavrasSet = new Set();
-
     let tentativas = 0;
     while (palavrasSelecionadas.length < maxPalavras && tentativas < 50) {
-        gruposDeFrases.sort(() => 0.5 - Math.random()); // Embaralha
+        gruposDeFrases.sort(() => 0.5 - Math.random());
 
         for (let grupo of gruposDeFrases) {
             if (palavrasSet.size >= maxPalavras) break;
@@ -126,7 +100,6 @@ function processarNivelDinamico(nivelBruto) {
                 const palavraOriginal = grupo.palavras[randIndex];
                 const palavraUpper = palavraOriginal.toUpperCase();
 
-                // VERIFICAÇÃO DE DUPLICIDADE
                 if (!palavrasSet.has(palavraUpper)) {
                     palavrasSet.add(palavraUpper);
                     palavrasSelecionadas.push(palavraUpper);
@@ -137,7 +110,7 @@ function processarNivelDinamico(nivelBruto) {
         tentativas++;
     }
 
-    // 2. Injeção no HTML
+    // 3. Injeção no HTML
     let textoProcessado = texto;
     palavrasSelecionadas.forEach(palavra => {
         const regex = new RegExp(`\\b${palavra}\\b`, 'gi');
@@ -552,4 +525,61 @@ function getLetraAleatoria() {
     return poolLetras[Math.floor(Math.random() * poolLetras.length)].toUpperCase();
 }
 
-iniciar();
+/* --- TROCA DE TEMA MANUAL --- */
+function mudarTema() {
+    const select = document.getElementById('escolha-tema');
+    TEMA_ATUAL = parseInt(select.value);
+
+    // NOVO: Salva a escolha no navegador para não perder ao dar F5
+    localStorage.setItem('puzzle_tema_selecionado', TEMA_ATUAL);
+
+    carregarDadosEIniciar();
+}
+
+/* --- INICIALIZAÇÃO E CARREGAMENTO DE DADOS --- */
+
+async function carregarDadosEIniciar() {
+    try {
+        const selectTema = document.getElementById('escolha-tema');
+        if (selectTema) {
+            selectTema.value = TEMA_ATUAL;
+        }
+        // 1. Atualiza a imagem da Capa Dinamicamente no HTML
+        const imgCapa = document.querySelector('.capa-jogo');
+        if (imgCapa) {
+            imgCapa.src = `assets/${TEMA_ATUAL}/1.png`;
+        }
+
+        // 2. Busca o JSON correto baseado na pasta do tema
+        const resposta = await fetch(`niveis/${TEMA_ATUAL}/niveis.json`);
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP: ${resposta.status} - O arquivo não foi encontrado na pasta niveis/${TEMA_ATUAL}/`);
+        }
+
+        const dadosCarregados = await resposta.json();
+
+        // 3. Verifica o formato do JSON e preenche as variáveis
+        // Aceita tanto o formato novo (com tituloJogo) quanto o antigo (só array)
+        if (Array.isArray(dadosCarregados)) {
+            NIVEIS_RAW = dadosCarregados;
+        } else {
+            NIVEIS_RAW = dadosCarregados.niveis;
+
+            // Atualiza o título na tela inicial
+            const h1Titulo = document.getElementById('titulo-geral-jogo');
+            if (h1Titulo && dadosCarregados.tituloJogo) {
+                h1Titulo.innerText = dadosCarregados.tituloJogo;
+                document.title = `${dadosCarregados.tituloJogo} - Puzzle Educacional`; // Muda o título da aba do navegador também!
+            }
+        }
+
+        iniciar();
+
+    } catch (erro) {
+        console.error("Erro completo:", erro);
+        alert("Erro técnico: " + erro.message);
+    }
+}
+
+carregarDadosEIniciar();

@@ -10,10 +10,18 @@
 
 <body>
 
-    <div id="tela-inicio" class="container visivel">
-        <h1>Mini Bichos</h1>
+    <div id="tela-inicio" class="container visivel" style="position: relative;">
 
-        <img src="assets/1.png" alt="Capa colorida com vários insetos" class="capa-jogo">
+        <div class="seletor-aventura">
+            <select id="escolha-tema" onchange="mudarTema()">
+                <option value="1">🐞 Mini Bichos</option>
+                <option value="2">🐪 Bichos dos Desertos e Gelo</option>
+            </select>
+        </div>
+
+        <h1 id="titulo-geral-jogo">Carregando...</h1>
+
+        <img src="" alt="Capa da aventura" class="capa-jogo">
 
         <p>Escolha a dificuldade para explorar a natureza:</p>
 

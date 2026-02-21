@@ -1,0 +1,47 @@
+{
+    "tituloJogo": "Bichos dos Desertos",
+    "niveis": [
+        {
+            "id": 1,
+            "titulo": "O Resistente Camelo",
+            "imagem": "assets/2/2.png",
+            "textoPuro": "O camelo é um animal perfeitamente adaptado ao calor do deserto. Ele possui corcovas nas costas onde armazena gordura para ter energia. Suas patas largas ajudam a caminhar na areia fofa sem afundar. Além disso, consegue beber muita água de uma só vez para aguentar longas viagens."
+        },
+        {
+            "id": 2,
+            "titulo": "O Gigante Urso Polar",
+            "imagem": "assets/2/3.png",
+            "textoPuro": "No gelo do ártico vive o grande urso polar. Sua pelagem branca serve como um excelente disfarce na neve fria. Ele é um nadador muito forte e passa horas na água gelada procurando comida. Apesar de parecer fofinho, é um dos maiores caçadores do mundo gelado."
+        },
+        {
+            "id": 3,
+            "titulo": "A Dança do Pinguim",
+            "imagem": "assets/2/4.png",
+            "textoPuro": "O pinguim é uma ave incrível que não sabe voar no céu, mas parece voar dentro da água. Ele usa suas asas como nadadeiras para pegar peixes velozes. Para se proteger do vento forte, os pinguins costumam ficar bem juntinhos para se esquentar no gelo."
+        },
+        {
+            "id": 4,
+            "titulo": "A Família Suricato",
+            "imagem": "assets/2/5.png",
+            "textoPuro": "O suricato é um pequeno mamífero que vive em grandes famílias em tocas na terra. Eles são famosos por ficarem em pé sobre as patas traseiras vigiando o horizonte com muita atenção. Sempre que um perigo se aproxima, o vigia solta um grito alto para avisar os outros amigos."
+        },
+        {
+            "id": 5,
+            "titulo": "A Serpente do Deserto",
+            "imagem": "assets/2/6.png",
+            "textoPuro": "A serpente desliza silenciosa pela areia quente do deserto. Ela gosta de tomar sol nas pedras secas para esquentar seu corpo escamoso. Algumas possuem um chocalho na ponta do rabo para assustar os grandes inimigos que chegam muito perto do seu ninho escondido."
+        },
+        {
+            "id": 6,
+            "titulo": "Raposa do ártico",
+            "imagem": "assets/2/7.png",
+            "textoPuro": "A raposa do ártico é uma caçadora muito esperta. Durante o inverno gelado, sua pelagem fica totalmente branca para se esconder na neve fofa. Ela corre rápida atrás da veloz lebre para conseguir sua comida e conseguir sobreviver ao frio rigoroso da montanha."
+        },
+        {
+            "id": 7,
+            "titulo": "O Majestoso Alce",
+            "imagem": "assets/2/8.png",
+            "textoPuro": "O grande alce caminha pesado e majestoso pela floresta gelada. Os machos possuem chifres enormes e pesados na cabeça que parecem galhos. Eles comem folhas verdes e cascas de árvores que encontram no caminho. É um animal forte que resiste muito bem ao clima frio."
+        }
+    ]
+}
